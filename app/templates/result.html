@@ -31,7 +31,7 @@
                         d="M14.6,2.5c-1.3,0-2.5,0.7-3.2,1.8l-1.4,2.2l-1.4-2.2c-0.7-1.1-1.9-1.8-3.2-1.8C2.5,2.5,0,5,0,8.1c0,3.7,3.3,6.8,8.2,11.3l1.8,1.6l1.8-1.6C16.7,14.9,20,11.8,20,8.1C20,5,17.5,2.5,14.6,2.5z" />
                 </svg>
             </button>
-            <span class="like-count" style="font-size: 1.2rem; min-width: 20px;">0</span>
+            <span class="like-count" style="font-size: 1.2rem; min-width: 20px; display: none;">0</span>
         </div>
         {% endif %}
     </li>
@@ -55,6 +55,7 @@
         if (countSpan) {
             let count = parseInt(countSpan.textContent) || 0;
             countSpan.textContent = count + 1;
+            countSpan.style.display = 'inline-block';
         }
 
         // Add a little pop effect reset after animation
