@@ -3,6 +3,16 @@
 {% block title %}結果 - 順番決めるくん 2{% endblock %}
 
 {% block content %}
+<div class="url-share-container" style="display: flex; justify-content: center; margin-bottom: 2rem;">
+    <button onclick="copyUrl()" class="btn" style="padding: 8px 16px; display: flex; align-items: center; gap: 5px;">
+        <span>このページのURLをコピー</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+        </svg>
+    </button>
+</div>
+
 <h1>決定された順番</h1>
 
 <ul class="result-list">
@@ -66,4 +76,71 @@
     }
 </script>
 {% endif %}
+<script>
+    function copyUrl() {
+        const url = window.location.href;
+
+        // Try the modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+                showCopyFeedback();
+            }).catch(err => {
+                console.error('Clipboard API failed:', err);
+                fallbackCopyTextToClipboard(url);
+            });
+        } else {
+            fallbackCopyTextToClipboard(url);
+        }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showCopyFeedback();
+            } else {
+                console.error('Fallback: Copying text command was unsuccessful');
+                alert('コピーに失敗しました。URLを手動でコピーしてください。');
+            }
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+            alert('コピーに失敗しました。');
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    function showCopyFeedback() {
+        // Visual feedback
+        const btn = document.querySelector('.url-share-container button');
+        const originalText = btn.innerHTML;
+
+        btn.innerHTML = `
+            <span>コピーしました!</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+        `;
+        btn.style.backgroundColor = '#4CAF50';
+        btn.style.color = 'white';
+
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.backgroundColor = '';
+            btn.style.color = '';
+        }, 2000);
+    }
+</script>
 {% endblock %}
