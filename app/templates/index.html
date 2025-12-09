@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>順番決めるくん 2</h1>
+
+<form action="/submit" method="post">
+    <div class="form-group">
+        <label for="names">参加者の名前 (1行に1人)</label>
+        <textarea id="names" name="names" placeholder="佐藤&#10;鈴木&#10;高橋" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="checkbox-wrapper">
+            <input type="checkbox" name="enable_likes" value="true">
+            いいねを数える
+        </label>
+    </div>
+
+    <button type="submit" class="btn">順番を決める</button>
+</form>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}結果 - 順番決めるくん 2{% endblock %}
+
+{% block content %}
+<h1>決定された順番</h1>
+
+<ul class="result-list">
+    {% for name in names %}
+    <li class="result-item">
+        <div style="display: flex; align-items: center;">
+            <span class="rank">{{ loop.index }}</span>
+            <span class="name">{{ name }}</span>
+        </div>
+
+        {% if enable_likes %}
+        <button class="like-btn" onclick="sendLike('{{ page_id }}', '{{ name }}', this)" title="いいね！">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M14.6,2.5c-1.3,0-2.5,0.7-3.2,1.8l-1.4,2.2l-1.4-2.2c-0.7-1.1-1.9-1.8-3.2-1.8C2.5,2.5,0,5,0,8.1c0,3.7,3.3,6.8,8.2,11.3l1.8,1.6l1.8-1.6C16.7,14.9,20,11.8,20,8.1C20,5,17.5,2.5,14.6,2.5z" />
+            </svg>
+        </button>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<div style="margin-top: 2rem;">
+    <a href="/" class="btn" style="background-color: var(--border-color); color: var(--text-color);">もう一度やる</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if enable_likes %}
+<script>
+    async function sendLike(pageId, name, btn) {
+        // Optimistic UI update
+        btn.classList.add('liked');
+
+        // Add a little pop effect reset after animation
+        setTimeout(() => {
+            btn.classList.remove('liked');
+        }, 300);
+
+        try {
+            const response = await fetch('/api/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    page_id: pageId,
+                    id: name
+                })
+            });
+
+            const data = await response.json();
+            console.log('Like sent:', data);
+
+            if (data.status === 'ignored') {
+                console.warn('Like ignored:', data.reason);
+            }
+        } catch (error) {
+            console.error('Error sending like:', error);
+        }
+    }
+</script>
+{% endif %}
+{% endblock %}
