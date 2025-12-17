@@ -22,9 +22,8 @@ deploy:
 dev:
 	@echo "Starting local development server on port $(PORT)..."
 	@echo "Topic: $(TOPIC_ID)"
-	PUBSUB_TOPIC_ID=$(TOPIC_ID) \
-	GOOGLE_CLOUD_PROJECT=$(PROJECT_ID) \
-	uvicorn app.main:app --host 0.0.0.0 --port $(PORT) --reload
+	GOOGLE_CLOUD_PROJECT=shingo-ar-gemini-e20251009 \
+	.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port $(PORT) --reload
 
 # Print help
 help:

@@ -47,7 +47,23 @@
 {% block scripts %}
 {% if enable_likes %}
 <script>
+        const LIKE_LIMIT = {{ like_limit }};
+
     async function sendLike(pageId, name, btn) {
+        // Check limit if set
+        if (LIKE_LIMIT > 0) {
+            const storageKey = `like_count_${pageId}_${name}`;
+            const currentCount = parseInt(localStorage.getItem(storageKey) || '0');
+
+            if (currentCount >= LIKE_LIMIT) {
+                alert(`「${name}」へのいいねは1人${LIKE_LIMIT}回までです！`);
+                return;
+            }
+
+            // Increment local storage count
+            localStorage.setItem(storageKey, (currentCount + 1).toString());
+        }
+
         // Optimistic UI update
         btn.classList.add('liked');
 

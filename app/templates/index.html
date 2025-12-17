@@ -11,9 +11,13 @@
 
     <div class="form-group">
         <label class="checkbox-wrapper">
-            <input type="checkbox" name="enable_likes" value="true">
+            <input type="checkbox" name="enable_likes" value="true" onchange="document.getElementById('like_limit_wrapper').style.display = this.checked ? 'block' : 'none'">
             いいねを数える
         </label>
+        <div id="like_limit_wrapper" style="display: none; margin-top: 10px; margin-left: 24px;">
+            <label for="like_limit" style="font-size: 0.9em;">1人あたりのいいね上限数 (0=無制限)</label>
+            <input type="number" id="like_limit" name="like_limit" value="10" min="0" style="width: 80px; padding: 4px;">
+        </div>
     </div>
 
     <button type="submit" class="btn">順番を決める</button>

@@ -53,7 +53,8 @@ async def read_root(request: Request):
 @app.post("/submit")
 async def submit(
     names: str = Form(...),
-    enable_likes: bool = Form(False)
+    enable_likes: bool = Form(False),
+    like_limit: int = Form(0)
 ):
     if not db:
         raise HTTPException(status_code=500, detail="Firestore not configured")
@@ -74,6 +75,7 @@ async def submit(
     doc_data = {
         "names": name_list,
         "enable_likes": enable_likes,
+        "like_limit": like_limit,
         "created_at": datetime.utcnow()
     }
     doc_ref.set(doc_data)
@@ -97,6 +99,7 @@ async def read_page(request: Request, page_id: str):
         "request": request, 
         "names": data.get("names", []), 
         "enable_likes": data.get("enable_likes", False),
+        "like_limit": data.get("like_limit", 0),
         "page_id": page_id
     })
 
